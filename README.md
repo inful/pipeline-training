@@ -3,6 +3,9 @@
 
 ## Ruffus
 
+
+### Intro
+
 *Ruffus* website with rich documentation and learning resources is [here](http://www.ruffus.org.uk).
 After reading the welcome message and the short summary of the framework, go to [Ruffus' simple tutorial](http://www.ruffus.org.uk/tutorials/new_tutorial/introduction.html). Reading it carefully will allow you to grasp basic elements of pipeline building with Ruffus, framework's vocabulary and syntax. [Install Ruffus](http://www.ruffus.org.uk/installation.html) and clone this repo to get the example from the simple tutorial (downloaded from [here](http://www.ruffus.org.uk/tutorials/new_tutorial/introduction_code.html#new-manual-introduction-code)). If the example works, try to break it:)
 
@@ -25,6 +28,7 @@ By now you should be able to know what decorators are, how to write a linear tra
 
 -----
 
+### Decorators
 
 In the example above only one decorator was used - *transform*. It is probably the most frequently used one in the variant calling pipeline too. ([here](http://www.ruffus.org.uk/tutorials/new_tutorial/transform.html) and [here](http://www.ruffus.org.uk/tutorials/new_tutorial/transform_in_parallel.html) are docs on it). Other decorators used in the pipeline are *@follows*, *@posttask*, *@mkdir*, *@jobs_limit*, *@merge / @collate* (merge several tasks' outputs, aka fan-in), and *@split / @subdivide* (fan-out). All *Ruffus* decorators are listed [here](http://www.ruffus.org.uk/decorators/decorators.html), and explained with examples in various chapters of the [manual](http://www.ruffus.org.uk/tutorials/new_tutorial/manual_contents.html). 
 
@@ -33,6 +37,7 @@ Go through the code of genotyping pipeline in GitLab, and note all decorators us
 
 -----
 
+### Indicators
 
 In the previous step, you have probably encountered functions like *suffix*, *formatter*, *regex*, *add_inputs*. These are [indicators](http://www.ruffus.org.uk/decorators/indicator_objects.html) (as I just learned:) which help to manipulate decorator parameters (input/output names). Read about the ones you came across in the pipeline, especially *touch_file* and *formatter*. [Here](http://www.ruffus.org.uk/tutorials/new_tutorial/output_file_names_code.html) is example code for the more complicated formatter.
 
