@@ -43,7 +43,8 @@ I encourage you to do so:)
 **Exercise 2**
 
 Add a task to our toy pipeline to jointly call variants from all BAM files. The (mock) result should be written to a single file, e.g. abc.vcf. 
-*Hint:* use @merge decorator
+
+*Hint:* use *@merge* decorator
 
 **Exercise 3**
 
@@ -63,14 +64,17 @@ Read about the ones you came across in the pipeline.
 Let's upgrade to pair end sequencing. Replace each input fasta file with two, e.g. *a.fasta* with *a_R1.fastq* and *a_R2.fastq*. 
 Add a trimming step that will take pairs of FASTQ files (R1 and R2) and output pairs of trimmed read files. 
 Adjust the mapping step so that it takes pairs of fastq files.
-*Hint*: you can use @collate and *regex/formatter* to bin the read-pairs
+
+*Hint*: you can use *@collate* and *regex/formatter* to bin the read-pairs
 
 **Exercise 5**
 
 We are creating now a substantial number of files. Let's organize them into folders. Refactor creation of FASTQ files so that they are all placed in one *raw_data/* directory. 
 Now, add a task (*organize_inputs*) to copy or link the FASTQ files from for each sample from *raw_data/* into separate directory with sample's name e.g. a/ for files a_R1.fastq and a_R2.fastq. 
-*Hint:* Formatter will let you extract sample name from the input filename
-If your read trimming task was written well, you won't need to change it. 
+
+*Hint*: *Formatter* will let you extract sample name from the input filename
+
+If your read-trimming task was written well, you won't need to change it. 
 Depending on how you implemented the organizing task, input and output file names may now be absolute paths (this could break some of the implementations downstream). 
 You can observe this by running pipeline_printout().
 To finish separating files, reimplement splitting VCF to place single-sample VCFs into sample-specific folders.
