@@ -30,20 +30,51 @@ By now you should be able to know what decorators are, how to write a linear tra
 
 ### Decorators
 
-In the example above only one decorator was used - *transform*. It is probably the most frequently used one in the variant calling pipeline too. ([here](http://www.ruffus.org.uk/tutorials/new_tutorial/transform.html) and [here](http://www.ruffus.org.uk/tutorials/new_tutorial/transform_in_parallel.html) are docs on it). Other decorators used in the pipeline are *@follows*, *@posttask*, *@mkdir*, *@jobs_limit*, *@merge / @collate* (merge several tasks' outputs, aka fan-in), and *@split / @subdivide* (fan-out). All *Ruffus* decorators are listed [here](http://www.ruffus.org.uk/decorators/decorators.html), and explained with examples in various chapters of the [manual](http://www.ruffus.org.uk/tutorials/new_tutorial/manual_contents.html). 
+In the example above only one decorator was used - *transform*. 
+It is probably the most frequently used one in the variant calling pipeline too. 
+([here](http://www.ruffus.org.uk/tutorials/new_tutorial/transform.html) and [here](http://www.ruffus.org.uk/tutorials/new_tutorial/transform_in_parallel.html) are docs on it). 
+Other decorators used in the pipeline are *@follows*, *@posttask*, *@mkdir*, *@jobs_limit*, *@merge / @collate* (merge several tasks' outputs, aka fan-in), and *@split / @subdivide* (fan-out). 
+All *Ruffus* decorators are listed [here](http://www.ruffus.org.uk/decorators/decorators.html), and explained with examples in various chapters of the [manual](http://www.ruffus.org.uk/tutorials/new_tutorial/manual_contents.html). 
 
-Go through the code of genotyping pipeline in GitLab, and note all decorators used. Read about them in the manual. Please note, that for every chapter in the manual there is example code you can use to play with the feature (as with the toy example pipeline above). I encourage you to do so:) 
+Go through the code of genotyping pipeline in GitLab, and note all decorators used. Read about them in the manual. 
+Please note, that for every chapter in the manual there is example code you can use to play with the feature (as with the toy example pipeline above). 
+I encourage you to do so:) 
 
-As an exercise write a task to jointly call variants from all BAM files, and write the result to a single file (e.g. abc.vcf). 
+**Exercise 2**
 
-*Hint:* use @merge and don't bother real variant calling on empty .bam files:)
+Add a task to our toy pipeline to jointly call variants from all BAM files. The (mock) result should be written to a single file, e.g. abc.vcf. 
+*Hint:* use @merge decorator
 
+**Exercise 3**
+
+Add a task to split the joint called VCF created in previous exercise into single-sample VCFs. And another task to filter each of these VCFs, e.g. a.vcf -> a.filtered.vcf.
 
 -----
 
 ### Indicators
 
-In the previous step, you have probably encountered functions like *suffix*, *formatter*, *regex*, *add_inputs*. These are [indicators](http://www.ruffus.org.uk/decorators/indicator_objects.html) (as I just learned:) which help to manipulate decorator parameters (input/output names). Read about the ones you came across in the pipeline, especially *touch_file* and *formatter*. [Here](http://www.ruffus.org.uk/tutorials/new_tutorial/output_file_names_code.html) is example code for the more complicated formatter.
+While learning decorators, you probably encountered functions like *suffix*, *formatter*, *regex*, *add_inputs*. 
+These are [indicators](http://www.ruffus.org.uk/decorators/indicator_objects.html) (as I just learned:) which help to manipulate decorator parameters (input/output names). 
+Read about the ones you came across in the pipeline. 
+[Here](http://www.ruffus.org.uk/tutorials/new_tutorial/output_file_names_code.html) is an example code for a more complicated *formatter* construct.
+
+**Exercise 4**
+
+Let's upgrade to pair end sequencing. Replace each input fasta file with two, e.g. *a.fasta* with *a_R1.fastq* and *a_R2.fastq*. 
+Add a trimming step that will take pairs of FASTQ files (R1 and R2) and output pairs of trimmed read files. 
+Adjust the mapping step so that it takes pairs of fastq files.
+*Hint*: you can use @collate and *regex/formatter* to bin the read-pairs
+
+**Exercise 5**
+
+We are creating now a substantial number of files. Let's organize them into folders. Refactor creation of FASTQ files so that they are all placed in one *raw_data/* directory. 
+Now, add a task (*organize_inputs*) to copy or link the FASTQ files from for each sample from *raw_data/* into separate directory with sample's name e.g. a/ for files a_R1.fastq and a_R2.fastq. 
+*Hint:* Formatter will let you extract sample name from the input filename
+If your read trimming task was written well, you won't need to change it. 
+Depending on how you implemented the organizing task, input and output file names may now be absolute paths (this could break some of the implementations downstream). 
+You can observe this by running pipeline_printout().
+To finish separating files, reimplement splitting VCF to place single-sample VCFs into sample-specific folders.
+
 
 
 -----
