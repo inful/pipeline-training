@@ -1,21 +1,16 @@
 #
-#   Initial template shamelessly copied from http://www.ruffus.org.uk/tutorials/new_tutorial/introduction_code.html#new-manual-introduction-code
+# Initial template shamelessly copied from
+# http://www.ruffus.org.uk/tutorials/new_tutorial/introduction_code.html#new-manual-introduction-code
 #
+import os
+import glob
+from ruffus import *
 
-#   The starting data files would normally exist beforehand!
-#       We create some empty files for this example
-#
-#
-
+# The starting data files would normally exist beforehand!
+# We create some empty files for this example
 starting_files = ["a_R1.fastq", "a_R2.fastq",
                   "b_R1.fastq", "b_R2.fastq",
                   "c_R1.fastq", "c_R2.fastq"]
-
-import os, glob
-
-#
-# Exercise 5
-#
 
 raw_data_dir = 'raw_data'
 if not os.path.isdir(raw_data_dir):
@@ -25,7 +20,10 @@ for ff in starting_files:
     if not os.path.exists(ff):
         open(os.path.join(raw_data_dir, ff), "w")
 
-from ruffus import *
+
+#
+# Exercise 5
+#
 
 
 @transform(glob.glob(os.path.join(raw_data_dir, '*.fastq')),
@@ -47,52 +45,51 @@ def organize_inputs(input_file, output_file, sample_name):
 @collate(organize_inputs,
          regex('(.+)_R[12].fastq'),
          [r'\1.trimmed.fq1', r'\1.trimmed.fq2'])
-def trim_reads(input_fastqs, output_fastqs):
+def trim_reads(_, output_fastqs):
     for o in output_fastqs:
         open(o, 'w')
 
 
 #
-#   Mapping fq1,fq2->sam
+# Mapping fq1,fq2->sam
 #
 @transform(trim_reads, suffix('.trimmed.fq1'), '.sam')
 def map_dna_sequence(input_files,
                      output_file):
     assert (len(input_files) == 2)
-    oo = open(output_file, "w")
+    open(output_file, "w")
 
 
 #
-#   Compression sam->bam
+# Compression sam->bam
 #
-@transform(map_dna_sequence, # Input = previous stage
-           suffix(".sam"),   # suffix = .sam
-           ".bam")           # Output  suffix = .bam
+@transform(map_dna_sequence,  # Input = previous stage
+           suffix(".sam"),    # suffix = .sam
+           ".bam")            # Output  suffix = .bam
 def compress_sam_file(input_file,
                       output_file):
-    ii = open(input_file)
-    oo = open(output_file, "w")
+    open(input_file)
+    open(output_file, "w")
 
 
 #
-#   Statistics bam->statistics
+# Statistics bam->statistics
 #
-@transform(compress_sam_file,  # Input = previous stage
-           suffix(".bam"),     # suffix = .bam
-           ".statistics",      # Output  suffix = .statistics
-           "use_linear_model") # Extra statistics parameter
+@transform(compress_sam_file,   # Input = previous stage
+           suffix(".bam"),      # suffix = .bam
+           ".statistics",       # Output  suffix = .statistics
+           "use_linear_model")  # Extra statistics parameter
 def summarise_bam_file(input_file,
-                       output_file,
-                       extra_stats_parameter):
+                       output_file):
     """
     Sketch of real analysis function
     """
-    ii = open(input_file)
-    oo = open(output_file, "w")
+    open(input_file)
+    open(output_file, "w")
 
 
 #
-#   Joint-call: bam, ... ,bam -> vcf
+# Joint-call: bam, ... ,bam -> vcf
 #
 @merge(compress_sam_file, 'all_samples.vcf')
 def joint_call_variants(input_bams, output_vcf):
@@ -102,7 +99,7 @@ def joint_call_variants(input_bams, output_vcf):
 
 
 #
-#   Split multisample VCF: vcf -> vcf,..., vcf
+# Split multisample VCF: vcf -> vcf,..., vcf
 #
 @split(joint_call_variants, '*/*.vcf')
 def split_multisample_vcf(input_vcf, output_vcfs):
@@ -121,8 +118,8 @@ def split_multisample_vcf(input_vcf, output_vcfs):
 #
 @transform(split_multisample_vcf, suffix('.vcf'), '.filtered.vcf')
 def filter_single_sample_vcf(input_vcf, output_vcf):
-    unfiltered = open(input_vcf)
-    filtered = open(output_vcf, 'w')
+    open(input_vcf)
+    open(output_vcf, 'w')
 
 
 pipeline_printout()
