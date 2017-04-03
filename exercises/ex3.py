@@ -47,7 +47,8 @@ def compress_sam_file(input_file,
            ".statistics",       # Output  suffix = .statistics
            "use_linear_model")  # Extra statistics parameter
 def summarise_bam_file(input_file,
-                       output_file):
+                       output_file,
+                       _):
     """
     Sketch of real analysis function
     """
